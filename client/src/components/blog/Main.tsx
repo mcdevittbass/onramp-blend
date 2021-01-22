@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Row, Button, Col } from 'reactstrap';
 import Search from './Search';
 import PostList from './PostList';
@@ -27,19 +27,46 @@ export const Header = () => {
     )
 }
 
+
 const Main = () => {
     const [blogData, setBlogData] = useState<IBlogPost[]>(data);
+    const [title, setTitle] = useState<string>('');
+    const [author, setAuthor] = useState<string>('');
+    const [list, setList] = useState<IBlogPost[]>(blogData);
+
+
+    useEffect(() => {
+        switch(true) {
+            // !! forces conversion to boolean
+            case !!title:
+                console.log(title)
+                const titleFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
+                    return blog.title.toLowerCase().includes(title.toLowerCase()); 
+                });
+                setList(titleFilter);
+                break;
+            case !!author:
+                console.log(author);
+                const authorFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
+                    return blog.author.toLowerCase().includes(author.toLowerCase()); 
+                });
+                setList(authorFilter);
+                break;
+            default:
+                setList(blogData);
+        }
+    }, [title, author, blogData]);
 
     return (
         <>
             <Header />
             <Row className='align-items-center'>
-                <Search />
-                <FavoriteButton />
+                <Search setTitle={setTitle} setAuthor={setAuthor}/>
+                <FavoriteButton blogData={blogData} setList={setList}/>
                 <WriteButton />
             </Row>
             <Row>
-                <PostList blogData={blogData} />
+                <PostList blogData={list} />
             </Row>
         </>
     )

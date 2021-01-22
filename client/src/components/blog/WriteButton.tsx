@@ -11,7 +11,7 @@ const WriteButton = (props:any) => {
     }
 
     return (
-        <Col className='text-center' >
+        <Col className='col-12 m-2 m-md-0 col-md-3 text-center' >
             <Button onClick={handleNav}>Create a post</Button>
         </Col>
     )

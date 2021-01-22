@@ -3,15 +3,12 @@ import { useParams } from 'react-router-dom';
 import { Card, CardText, CardTitle, CardSubtitle, CardBody} from 'reactstrap';
 import { Header, IBlogPost } from './Main';
 
-//work on getting params from uri - consider RouteComponentProps from react-router
-
 type TPostProps = { blogData: IBlogPost[]}
 type TParam = { blogId: string };
 
 const Post = ({ blogData }:TPostProps) => {
 
     const { blogId }:TParam = useParams();
-    console.log(blogId);
 
     //returns an array with one object in it (blogIds must be unique)
     const currentBlog:IBlogPost[] = blogData.filter((blog: IBlogPost) => {

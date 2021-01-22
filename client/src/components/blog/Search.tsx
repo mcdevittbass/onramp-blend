@@ -1,37 +1,51 @@
 import React, { useState } from 'react';
 import { Form, Input, Button, Col, Row, FormGroup, Label } from 'reactstrap';
 
-const Search = (props: any) => {
-    const [title, setTitle] = useState<string>('');
-    const [author, setAuthor] = useState<string>('');
+type TSearchProps = { 
+    setTitle: (title:string)=>void, 
+    setAuthor: (author:string)=>void
+};
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>):void => {
+const Search = ({ setTitle, setAuthor } :TSearchProps) => {
+    // const [localTitle, setLocalTitle] = useState<string>('');
+    // const [localAuthor, setLocalAuthor] = useState<string>('');
+    const [selected, setSelected] = useState<string>('title');
+    const [localValue, setLocalValue] = useState<string>('');
+
+    const handleChangeParam = (e: React.ChangeEvent<HTMLInputElement>):void => {
+        setTitle('');
+        setAuthor('');
+        let paramValue = e.target.value;
+        setSelected(paramValue);
+    }
+
+    const handleSetParams = (e: React.ChangeEvent<HTMLInputElement>):void => {
         e.preventDefault();
-        if(e.target.name == 'title') {
-            setTitle(e.target.value)
-        }
-        else if(e.target.name == 'author') {
-            setAuthor(e.target.value);
-        }
+        setLocalValue(e.target.value);
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
         e.preventDefault();
-        //make a get request where title=(input) or author=(input)
-        //add error handling for inputs that don't yield anything
-
-        setTitle('');
-        setAuthor('');
-        console.log(e.target);
+        if(selected == 'title') {
+            setTitle(localValue);
+        } else {
+            setAuthor(localValue);
+        }
     }
 
     return (
         <Col>
             <Form className='m-4 p-2 w-100' onSubmit={handleSubmit} inline>
                 <Row>
+                    <FormGroup>
+                        <Label for='searchParam' className='mr-2'>Search by </Label>
+                        <Input type='select' name='searchParam' id='searchParam' onChange={handleChangeParam}>
+                            <option value='title'>Title</option>
+                            <option value='author'>Author</option>
+                        </Input>
+                    </FormGroup>
                     <FormGroup className='m-2'>
-                        <Label for='title' className='mr-2'>Search by Title</Label>
-                        <Input type='text' id='title' name='title' value={title} onChange={handleChange} />
+                        <Input type='text' id={selected} name={selected} value={localValue || ''} onChange={handleSetParams} />
                     </FormGroup>
                     <FormGroup>
                         <Button type='submit' className='btn btn-success m-2'>Search</Button>
