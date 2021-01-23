@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Row, Button, Col } from 'reactstrap';
+import { Row, Button } from 'reactstrap';
 import Search from './Search';
 import PostList from './PostList';
 import FavoriteButton from './Favorites';
@@ -7,12 +7,13 @@ import WriteButton from './WriteButton';
 import data from '../../MOCK_DATA.json';
 
 export interface IBlogPost {
-    blogId: {$oid: string};
+    blogId: number;
     title: string;
     author: string;
-    previewText?: string;
+    previewText?: string | null;
     fullText?: string;
     favorite: boolean;
+    date: string;
 }
 
 export const Header = () => {
@@ -27,7 +28,6 @@ export const Header = () => {
     )
 }
 
-
 const Main = () => {
     const [blogData, setBlogData] = useState<IBlogPost[]>(data);
     const [title, setTitle] = useState<string>('');
@@ -35,6 +35,7 @@ const Main = () => {
     const [list, setList] = useState<IBlogPost[]>(blogData);
 
 
+    //move this logic to PostList?
     useEffect(() => {
         switch(true) {
             // !! forces conversion to boolean

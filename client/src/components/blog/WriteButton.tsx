@@ -7,6 +7,7 @@ const WriteButton = (props:any) => {
     const history = useHistory();
 
     const handleNav = (e: React.MouseEvent<HTMLButtonElement>) => {
+        console.log(history);
         history.push('/write');
     }
 

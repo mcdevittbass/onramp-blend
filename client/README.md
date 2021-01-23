@@ -1,14 +1,10 @@
 Friday, Jan. 22:
 
 Front End setup:
-        - Enable search by title
-        - Add other search options
-    - Make a Write post form
-    - get new mock data with date
-    - add favorite button (heart?) to individual posts (in list and on own page)
-    - add delete button to individual posts (in list and on own page)
     - login page
     - create account page
+    - consider adding icons with capabilities to individual post page
+    - consider making separate favorites list
 
 Database setup:
     - final schema determination
