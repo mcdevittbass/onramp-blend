@@ -1,23 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, MouseEvent } from 'react';
 import { Row, Button } from 'reactstrap';
 import Search from './Search';
 import PostList from './PostList';
-import FavoriteButton from './Favorites';
+import FavoriteCheckBox from './FavoriteCheckBox';
 import WriteButton from './WriteButton';
-import data from '../../MOCK_DATA.json';
-
-export interface IBlogPost {
-    blogId: number;
-    title: string;
-    author: string;
-    previewText?: string | null;
-    fullText?: string;
-    favorite: boolean;
-    date: string;
-}
+import { IBlogPost } from '../../App';
 
 export const Header = () => {
-    const handleSignOut = (e: React.MouseEvent<HTMLButtonElement>): void => {
+    const handleSignOut = (e: MouseEvent<HTMLButtonElement>): void => {
         console.log("clicked signout")
     }
 
@@ -28,46 +18,26 @@ export const Header = () => {
     )
 }
 
-const Main = () => {
-    const [blogData, setBlogData] = useState<IBlogPost[]>(data);
-    const [title, setTitle] = useState<string>('');
-    const [author, setAuthor] = useState<string>('');
-    const [list, setList] = useState<IBlogPost[]>(blogData);
+export interface IMainProps { 
+    blogData: IBlogPost[]; 
+    favorites: IBlogPost[];
+    setFavorites: (favorites:SetStateAction<IBlogPost[]>)=>void;
+    list: IBlogPost[];
+    setList: (list:SetStateAction<IBlogPost[]>)=>void;
+}
 
-
-    //move this logic to PostList?
-    useEffect(() => {
-        switch(true) {
-            // !! forces conversion to boolean
-            case !!title:
-                console.log(title)
-                const titleFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
-                    return blog.title.toLowerCase().includes(title.toLowerCase()); 
-                });
-                setList(titleFilter);
-                break;
-            case !!author:
-                console.log(author);
-                const authorFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
-                    return blog.author.toLowerCase().includes(author.toLowerCase()); 
-                });
-                setList(authorFilter);
-                break;
-            default:
-                setList(blogData);
-        }
-    }, [title, author, blogData]);
+const Main = ({ blogData, list, setList, favorites, setFavorites }: IMainProps) => {
 
     return (
         <>
             <Header />
             <Row className='align-items-center'>
-                <Search setTitle={setTitle} setAuthor={setAuthor}/>
-                <FavoriteButton blogData={blogData} setList={setList}/>
+                <Search blogData={blogData} setList={setList}/>
+                <FavoriteCheckBox blogData={blogData} setList={setList} favorites={favorites}/>
                 <WriteButton />
             </Row>
             <Row>
-                <PostList blogData={list} />
+                <PostList blogData={list} favorites={favorites} setFavorites={setFavorites} list={list} setList={setList}/>
             </Row>
         </>
     )

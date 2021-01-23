@@ -1,15 +1,24 @@
 Friday, Jan. 22:
 
 Front End setup:
+        - Enable search by title
+        - Add other search options
+        - Make a Write post form
+        - get new mock data with date and new id format
+        - add date formatting
+        - add favorite button (heart?) to individual posts (in list and on own page)
+        - add delete button to individual posts (in list and on own page)
+
+Saturday, Jan. 23:
     - login page
     - create account page
     - consider adding icons with capabilities to individual post page
-    - consider making separate favorites list
+    - consider making separate favorites
 
 Database setup:
     - final schema determination
     - add data to db with pgAdmin
-    - research how to share
+    - research how to share (env variable?)
 
-Notes:
+Notes: It's running slow - check render hold-ups https://www.toptal.com/react/optimizing-react-performance
     

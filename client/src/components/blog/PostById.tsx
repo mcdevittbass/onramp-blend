@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react';
+import React, { SetStateAction, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { Card, CardText, CardTitle, CardSubtitle, CardBody} from 'reactstrap';
-import { Header, IBlogPost } from './Main';
+import { Card, CardText, CardTitle, CardSubtitle, CardBody, Row, Col} from 'reactstrap';
+import { Header } from './Main';
+import { IBlogPost } from '../../App';
 import { dateSwitcharoo } from './PostList';
+import FavoriteIcon from './FavoriteIcon';
+import TrashIcon from './TrashIcon';
+import { IMainProps } from './Main';
 
-type TPostProps = { blogData: IBlogPost[]}
+
 type TParam = { blogId: string };
 
-const Post = ({ blogData }:TPostProps) => {
+const Post = ({ blogData, list, setList, favorites, setFavorites }:IMainProps) => {
 
     const { blogId }:TParam = useParams();
 
@@ -16,16 +20,22 @@ const Post = ({ blogData }:TPostProps) => {
         let blogNumId = parseInt(blogId);
         return blog.blogId == blogNumId;
     });
-
+    const thisBlog = currentBlog[0];
 
     return (
         <>
             <Header />
             <Card>
                 <CardBody>
-                    <CardTitle tag='h4'>{currentBlog[0].title}</CardTitle>
-                    <CardSubtitle tag='h5'>Written by {currentBlog[0].author}</CardSubtitle>
-                    <CardText>{dateSwitcharoo(currentBlog[0].date)}</CardText>
+                    <CardTitle tag='h4'>{thisBlog.title}</CardTitle>
+                    <CardSubtitle tag='h5'>Written by {thisBlog.author}</CardSubtitle>
+                    <Row className='justify-content-between'>
+                        <CardText>{dateSwitcharoo(thisBlog.date)}</CardText>
+                        <Col>
+                            <FavoriteIcon post={thisBlog} favorites={favorites} setFavorites={setFavorites}/>
+                            <TrashIcon post={thisBlog} list={list} setList={setList}/>
+                        </Col>
+                    </Row>
                     <CardText>{currentBlog[0].fullText}</CardText>
                 </CardBody>
             </Card>

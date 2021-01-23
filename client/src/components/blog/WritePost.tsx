@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Form, Row, Col, Label, Input, FormGroup, Button, Card, CardBody, CardHeader } from 'reactstrap';
 import { Header } from './Main';
 import ReturnHome from './ReturnHome';
-import { IBlogPost } from './Main';
+import { IBlogPost } from '../../App';
 
 const WritePost = () => {
     const [newTitle, setNewTitle] = useState('');

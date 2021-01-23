@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Button, Col } from 'reactstrap';
 
-const WriteButton = (props:any) => {
+const WriteButton = () => {
 
     const history = useHistory();
 

@@ -1,35 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Form, Input, Button, Col, Row, FormGroup, Label } from 'reactstrap';
+import { IBlogPost } from '../../App';
 
 type TSearchProps = { 
-    setTitle: (title:string)=>void, 
-    setAuthor: (author:string)=>void
+    blogData: IBlogPost[], 
+    setList: (list:React.SetStateAction<IBlogPost[]>)=>void 
 };
 
-const Search = ({ setTitle, setAuthor } :TSearchProps) => {
-    // const [localTitle, setLocalTitle] = useState<string>('');
-    // const [localAuthor, setLocalAuthor] = useState<string>('');
+const Search = ({ blogData, setList } :TSearchProps) => {
     const [selected, setSelected] = useState<string>('title');
-    const [localValue, setLocalValue] = useState<string>('');
+    const [selectedValue, setSelectedValue] = useState<string>('');
+
 
     const handleChangeParam = (e: React.ChangeEvent<HTMLInputElement>):void => {
-        setTitle('');
-        setAuthor('');
+        setSelectedValue('');
         let paramValue = e.target.value;
         setSelected(paramValue);
     }
 
-    const handleSetParams = (e: React.ChangeEvent<HTMLInputElement>):void => {
+    const handleSetParamValue = (e: React.ChangeEvent<HTMLInputElement>):void => {
         e.preventDefault();
-        setLocalValue(e.target.value);
+        setSelectedValue(e.target.value);
     }
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>):void => {
         e.preventDefault();
-        if(selected == 'title') {
-            setTitle(localValue);
+        if(selectedValue.length > 0) {
+            switch(selected) {
+                case 'title':
+                    const titleFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
+                        return blog.title.toLowerCase().includes(selectedValue.toLowerCase()); 
+                    });
+                    setList(titleFilter);
+                    break;
+                case 'author':
+                    const authorFilter:IBlogPost[] = blogData.filter((blog:IBlogPost) => {
+                        return blog.author.toLowerCase().includes(selectedValue.toLowerCase()); 
+                    });
+                    setList(authorFilter);
+                    break;
+                default:
+                    console.error("There was a problem with the select element.")
+            }
         } else {
-            setAuthor(localValue);
+            setList(blogData);
         }
     }
 
@@ -45,7 +59,7 @@ const Search = ({ setTitle, setAuthor } :TSearchProps) => {
                         </Input>
                     </FormGroup>
                     <FormGroup className='m-2'>
-                        <Input type='text' id={selected} name={selected} value={localValue || ''} onChange={handleSetParams} />
+                        <Input type='text' id={selected} name={selected} value={selectedValue} onChange={handleSetParamValue} />
                     </FormGroup>
                     <FormGroup>
                         <Button type='submit' className='btn btn-success m-2'>Search</Button>

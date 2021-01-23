@@ -1,21 +1,19 @@
 import React, { useState } from 'react';
 import { Col, Button, FormGroup, Label, Input } from 'reactstrap';
-import { IBlogPost } from './Main';
+import { IBlogPost } from '../../App';
 
 type TFaveProps = { 
     blogData: IBlogPost[],
+    favorites: IBlogPost[],
     setList: (list:React.SetStateAction<IBlogPost[]>)=>void 
 }
 
-const FavoriteButton = ({ blogData, setList }:TFaveProps) => {
+const FavoriteCheckBox = ({ blogData, setList, favorites }:TFaveProps) => {
     const [checked, setChecked] = useState('');
-
+    
     const handleShowFavorites = (event: React.ChangeEvent<HTMLInputElement>): void => {
         let checkValue = event.target.value;
-        if(checkValue == '') {
-            const favorites = blogData.filter((post:IBlogPost) => {
-                return post.favorite == true;
-            });
+        if(checkValue.length < 1) {
             setChecked('fave');
             setList(favorites);
         } else {
@@ -32,9 +30,8 @@ const FavoriteButton = ({ blogData, setList }:TFaveProps) => {
                     Show My Favorites
                 </Label>
             </FormGroup>
-            {/* <Button onClick={handleShowFavorites}>Show My Favorites</Button> */}
         </Col>
     )
 }
 
-export default FavoriteButton;
+export default FavoriteCheckBox;
