@@ -7,37 +7,37 @@ import { IBlogPost } from '../../App';
 
 type TFaveProps = { 
     post: IBlogPost; 
-    favorites: IBlogPost[]; 
-    setFavorites: (favorites:React.SetStateAction<IBlogPost[]>)=>void 
+    favorites: number[]; 
+    setFavorites: (favorites:React.SetStateAction<number[]>)=>void 
 };
 
 const FavoriteIcon = ({ post, favorites, setFavorites }:TFaveProps) => {
-    const [faveIcon, setFaveIcon] = useState<IconProp>(post.favorite ? fasFaHeart : farFaHeart)
+    const [isFave, setIsFave] = useState<boolean>(favorites.some(num => num === post.blogID));
+    const [faveIcon, setFaveIcon] = useState<IconProp>(isFave ? fasFaHeart : farFaHeart);
+
+    //useEffect - on favorites update, send put request to db containing with new array (set, don't append)
 
     const changeFavorites = (e:MouseEvent<SVGSVGElement>, post:IBlogPost):void => {
-        //send put request to db to change favorite
-        let updated:IBlogPost;
-        let newFaves: IBlogPost[];
-
-        updated = {...post, favorite: !post.favorite}
-
-        //reasses this method...
-        if(faveIcon === farFaHeart) {
-            setFaveIcon(fasFaHeart);
-            newFaves = [...favorites, updated];
+        console.log(isFave);
+        let newFaves:number[];
+        if(isFave) {
+            setIsFave(false);
+            setFaveIcon(farFaHeart);
+            let faveIndex = favorites.indexOf(post.blogID);
+            newFaves = favorites;
+            newFaves.splice(faveIndex, 1)
             setFavorites(newFaves);
         } else {
-            setFaveIcon(farFaHeart);
-            let index = favorites.indexOf(post);
-            newFaves = [...favorites];
-            newFaves.splice(index, index + 1);
-            setFavorites(newFaves);
+            setIsFave(true)
+            setFaveIcon(fasFaHeart);
+            setFavorites([...favorites, post.blogID]);
         }
+        console.log(favorites);
     }
 
     return (
         <FontAwesomeIcon className='font-icon' icon={faveIcon} 
-            size="2x" title={post.favorite ? "Remove from favorites" : "Add to Favorites"}
+            size="2x" title={isFave ? "Remove from favorites" : "Add to Favorites"}
             onClick={(e) => changeFavorites(e, post)}/>
     )
 }

@@ -9,16 +9,16 @@ import TrashIcon from './TrashIcon';
 import { IMainProps } from './Main';
 
 
-type TParam = { blogId: string };
+type TParam = { blogID: string };
 
 const Post = ({ blogData, list, setList, favorites, setFavorites }:IMainProps) => {
 
-    const { blogId }:TParam = useParams();
+    const { blogID }:TParam = useParams();
 
-    //an array with one object in it (blogIds must be unique)
+    //an array with one object in it (blogIDs must be unique)
     const currentBlog:IBlogPost[] = blogData.filter((blog: IBlogPost) => {
-        let blogNumId = parseInt(blogId);
-        return blog.blogId == blogNumId;
+        let blogNumId = parseInt(blogID);
+        return blog.blogID == blogNumId;
     });
     const thisBlog = currentBlog[0];
 
@@ -36,7 +36,7 @@ const Post = ({ blogData, list, setList, favorites, setFavorites }:IMainProps) =
                             <TrashIcon post={thisBlog} list={list} setList={setList}/>
                         </Col>
                     </Row>
-                    <CardText>{currentBlog[0].fullText}</CardText>
+                    <CardText>{currentBlog[0].fulltext}</CardText>
                 </CardBody>
             </Card>
         </>

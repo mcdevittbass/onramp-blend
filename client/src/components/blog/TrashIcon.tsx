@@ -10,26 +10,26 @@ type TFaveProps = {
     setList: (favorites:React.SetStateAction<IBlogPost[]>)=>void 
 };
 
-type TCheckParam = { blogId: string };
+type TCheckParam = { blogID: string };
 
 const TrashIcon = ({ post, list, setList }:TFaveProps) => {
-    let { blogId }:TCheckParam = useParams();
+    let { blogID }:TCheckParam = useParams();
     const history = useHistory();
 
     const deletePost = (id:number):void => {
         //send delete request to db
         //add "are you sure?"
 
-        let newList = list.filter(postFromList => postFromList.blogId !== post.blogId);
+        let newList = list.filter(postFromList => postFromList.blogID !== post.blogID);
         setList(newList);
-        if(blogId) {
+        if(blogID) {
             history.push('/main');
         }
     }
 
     return (
         <FontAwesomeIcon className='font-icon' icon={faTrashAlt} size="2x" title="Delete this post"
-                        onClick={() => deletePost(post.blogId)}/>
+                        onClick={() => deletePost(post.blogID)}/>
     )
 }
 

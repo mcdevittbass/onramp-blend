@@ -4,11 +4,19 @@ import { Header } from './Main';
 import ReturnHome from './ReturnHome';
 import { IBlogPost } from '../../App';
 
+interface IBlogPostRequest {
+    title: string,
+    author: string,
+    previewtext: string,
+    fulltext: string,
+    date: string
+}
+
 const WritePost = () => {
     const [newTitle, setNewTitle] = useState('');
     const [newAuthor, setNewAuthor] = useState('');
-    const [newFullText, setNewFullText] = useState('');
-    const [newPreviewText, setNewPreviewText] = useState('');
+    const [newfulltext, setNewfulltext] = useState('');
+    const [newpreviewtext, setNewpreviewtext] = useState('');
     const [newDate, setNewDate] = useState('');
 
     const handleChangeInput = (e:ChangeEvent<HTMLInputElement>) => {
@@ -19,11 +27,11 @@ const WritePost = () => {
             case 'author':
                 setNewAuthor(e.target.value);
                 break;
-            case 'newFullText':
-                setNewFullText(e.target.value);
+            case 'newfulltext':
+                setNewfulltext(e.target.value);
                 break;
-            case 'newPreviewText':
-                setNewPreviewText(e.target.value);
+            case 'newpreviewtext':
+                setNewpreviewtext(e.target.value);
                 break;
             case 'date':
                 setNewDate(e.target.value);
@@ -34,14 +42,11 @@ const WritePost = () => {
     const handleAddPost = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //make a post request to the backend, add to database
-        const newPost:IBlogPost = {
-            //figure out generating id
-            blogId: 1,
+        const newPost:IBlogPostRequest = {
             title: newTitle,
             author: newAuthor,
-            previewText: newPreviewText,
-            fullText: newFullText,
-            favorite: false,
+            previewtext: newpreviewtext,
+            fulltext: newfulltext,
             date: ''
         }
         console.log(newPost);
@@ -51,8 +56,8 @@ const WritePost = () => {
     const clearForm = () => {
         setNewTitle('');
         setNewAuthor('');
-        setNewFullText('');
-        setNewPreviewText('');
+        setNewfulltext('');
+        setNewpreviewtext('');
         setNewDate('');
     }
 
@@ -95,18 +100,18 @@ const WritePost = () => {
                         </Row>
                         <Row form>
                         <FormGroup className='w-100'>
-                            <Label for="newFullText">Content</Label>
-                            <Input type="textarea" name="newFullText" id="newFullText" rows='20' 
-                                value={newFullText}
+                            <Label for="newfulltext">Content</Label>
+                            <Input type="textarea" name="newfulltext" id="newfulltext" rows='20' 
+                                value={newfulltext}
                                 placeholder="Write your blog post here..." 
                                 onChange={(e) => handleChangeInput(e)}/>
                         </FormGroup>
                         </Row>
                         <Row form>
                         <FormGroup className='w-100'>
-                            <Label for="newPreviewText">Content</Label>
-                            <Input type="textarea" name="newPreviewText" id="newPreviewText" rows='5' 
-                                value={newPreviewText}
+                            <Label for="newpreviewtext">Content</Label>
+                            <Input type="textarea" name="newpreviewtext" id="newpreviewtext" rows='5' 
+                                value={newpreviewtext}
                                 placeholder="Optional: add preview text to peak readers' interest." 
                                 onChange={(e) => handleChangeInput(e)}/>
                         </FormGroup>

@@ -27,8 +27,8 @@ export const Header = () => {
 
 export interface IMainProps { 
     blogData: IBlogPost[]; 
-    favorites: IBlogPost[];
-    setFavorites: (favorites:SetStateAction<IBlogPost[]>)=>void;
+    favorites: number[];
+    setFavorites: (favorites:SetStateAction<number[]>)=>void;
     list: IBlogPost[];
     setList: (list:SetStateAction<IBlogPost[]>)=>void;
 }
