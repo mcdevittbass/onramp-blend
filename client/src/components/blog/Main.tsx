@@ -5,10 +5,17 @@ import PostList from './PostList';
 import FavoriteCheckBox from './FavoriteCheckBox';
 import WriteButton from './WriteButton';
 import { IBlogPost } from '../../App';
+import { useHistory } from 'react-router-dom';
 
 export const Header = () => {
+
+    const history = useHistory();
+
     const handleSignOut = (e: MouseEvent<HTMLButtonElement>): void => {
         console.log("clicked signout")
+        //clear sessionStorage (or other JWT storage location?)
+        
+        history.push('/landing');
     }
 
     return (

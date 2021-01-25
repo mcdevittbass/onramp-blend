@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, ChangeEvent } from 'react';
 import { Form, Row, Col, Label, Input, FormGroup, Button, Card, CardBody, CardHeader } from 'reactstrap';
 import { Header } from './Main';
 import ReturnHome from './ReturnHome';
@@ -11,7 +11,7 @@ const WritePost = () => {
     const [newPreviewText, setNewPreviewText] = useState('');
     const [newDate, setNewDate] = useState('');
 
-    const handleChangeInput = (e:React.ChangeEvent<HTMLInputElement>) => {
+    const handleChangeInput = (e:ChangeEvent<HTMLInputElement>) => {
         switch(e.target.name) {
             case 'title':
                 setNewTitle(e.target.value);
