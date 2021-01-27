@@ -1,6 +1,6 @@
 import  express, {Request, Response} from 'express';
-import { blogRouter } from './blogRouter';
-import { authRouter } from './authRouter';
+import { blogRouter } from './blog/blogRouter';
+import { userRouter } from './user/userRouter';
 
 const createError = require('http-errors');
 const cors = require('cors');
@@ -23,7 +23,7 @@ app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 
 app.use('/blog', blogRouter);
-app.use('/user', authRouter);
+app.use('/user', userRouter);
 
 app.get('/', (req:Request, res:Response) => res.send("Hello, I am working"));
 

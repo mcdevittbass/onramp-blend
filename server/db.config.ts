@@ -1,9 +1,10 @@
 const pg = require('pg'); 
+const config = require('./config');
 
 export const pool = new pg.Pool({
     user: 'postgres',
     host: 'localhost',
     database: 'blendblog',
-    password: 'BL3nd2021',
+    password: config.postgresPassword,
     port: 5432,
   })
