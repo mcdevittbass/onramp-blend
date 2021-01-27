@@ -30,7 +30,6 @@ Now you are ready to run the project with npm start in the server directory and 
 
 
 
-
 ## Overview 🤖
 
 Congratulations for making it this far in the interview process for the Blend Apprenticeship!
