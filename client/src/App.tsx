@@ -6,10 +6,6 @@ import WritePost from './components/blog/WritePost';
 import Post from './components/blog/PostById';
 //import data from './MOCK_DATA.json';
 import LandingPage from './components/auth/Landing';
-const axios = require('axios').default;
-
-//const confirmedJSONString = JSON.stringify(data);
-//const parsedData:IBlogPost[] = JSON.parse(confirmedJSONString);
 
 export interface IBlogPost {
   blogID: number;
@@ -20,43 +16,27 @@ export interface IBlogPost {
   date: string;
 }
 
-const tempFaves = [200, 3, 7];
+export interface IMyPosts {
+  blogID: number,
+  userID: number
+}
 
 function App() {
   const [blogData, setBlogData] = useState<IBlogPost[]>([]);
   const [list, setList] = useState<IBlogPost[]>(blogData);
-  const [favorites, setFavorites] = useState<number[]>(tempFaves);
+  const [favorites, setFavorites] = useState<number[]>([]);
+  const [userPosts, setUserPosts] = useState<IMyPosts[]>([]);
+  const [currentToEdit, setCurrentToEdit] = useState<IBlogPost | null>(null);
 
-  useEffect(() => {
-    // (async ():Promise<void> => {
-    // try {
-    //   const response = await axios.get('http://localhost:3001/blog');
-    //   console.log(response.data);
-    //   setBlogData(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-    // })();
-    axios.get('http://localhost:3001/blog')
-      .then((response:any) => {
-        setBlogData(response.data);
-        console.log(response.data);
-      }).catch((err:any) => console.error(err));
-  }, []);  
-
-  useEffect(() => {
-    setList(blogData);
-  },[blogData]);
-
-
+ 
   return (
     <Router>
       <Switch>
-        <Route path='/landing' component={LandingPage} />
-        <Route exact path='/main' render={() => <Main blogData={blogData} list={list} setList={setList} favorites={favorites} setFavorites={setFavorites} />} />
-        <Route path='/main/:blogID' render={() => <Post blogData={blogData} list={list} setList={setList} favorites={favorites} setFavorites={setFavorites} />} />
-        <Route path='/write' component={WritePost} />
-        <Redirect to='/main' />
+        <Route path='/landing' render={() => <LandingPage setFavorites={setFavorites} setUserPosts={setUserPosts}/>} />
+        <Route exact path='/main' render={() => <Main blogData={blogData} setBlogData={setBlogData} list={list} setList={setList} favorites={favorites} setFavorites={setFavorites} userPosts={userPosts} setUserPosts={setUserPosts} setCurrentToEdit={setCurrentToEdit}/>} />
+        <Route exact path='/main/blog/:blogID' render={() => blogData.length ? <Post blogData={blogData} setBlogData={setBlogData} list={list} setList={setList} favorites={favorites} setFavorites={setFavorites} userPosts={userPosts} setUserPosts={setUserPosts} setCurrentToEdit={setCurrentToEdit} /> : <div><h4>Couldn't get post data</h4></div>} />
+        <Route exact path='/main/write' render={ () =>  <WritePost currentToEdit={currentToEdit} setCurrentToEdit={setCurrentToEdit}/>} />
+        <Redirect to='/landing' />
       </Switch>
     </Router>
   );

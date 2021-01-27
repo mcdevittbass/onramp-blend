@@ -1,10 +1,17 @@
-import React, { MouseEvent, useState } from 'react';
+import React, { MouseEvent, SetStateAction, useState } from 'react';
 import { Row, Col, Button } from 'reactstrap';
 import Login from './Login';
 import CreateAccount from './CreateAccount';
+import { IMyPosts } from '../../App';
 
-const LandingPage = () => {
-    const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<Login />)
+export interface ILoginProps { 
+    setFavorites: (favorites: SetStateAction<number[]>) =>void,
+    setUserPosts: (userPosts: SetStateAction<IMyPosts[]>) => void
+}
+
+//check for current auth token, then redirect to user page if current
+const LandingPage = ({ setFavorites, setUserPosts }:ILoginProps) => {
+    const [currentComponent, setCurrentComponent] = useState<JSX.Element>(<Login setFavorites={setFavorites} setUserPosts={setUserPosts}/>)
     const [switchText, setSwitchText] = useState<string>("Don't already have an account? Create one.")
 
     const handleChangeComponent = (e:MouseEvent<HTMLButtonElement>) => {
@@ -12,7 +19,7 @@ const LandingPage = () => {
             setCurrentComponent(<CreateAccount setComponent={setCurrentComponent}/>);
             setSwitchText("Already have an account? Login")
         } else {
-            setCurrentComponent(<Login />);
+            setCurrentComponent(<Login setFavorites={setFavorites} setUserPosts={setUserPosts}/>);
             setSwitchText("Don't already have an account? Create one.")
         }
     }

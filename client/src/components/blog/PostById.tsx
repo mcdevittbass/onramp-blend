@@ -1,44 +1,68 @@
-import React, { SetStateAction, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Card, CardText, CardTitle, CardSubtitle, CardBody, Row, Col} from 'reactstrap';
-import { Header } from './Main';
+import Header from './Header';
 import { IBlogPost } from '../../App';
 import { dateSwitcharoo } from './PostList';
 import FavoriteIcon from './FavoriteIcon';
 import TrashIcon from './TrashIcon';
+import ReturnHome from './ReturnHome';
+import EditButton from './EditButton';
 import { IMainProps } from './Main';
+import { IMyPosts } from '../../App'
 
 
 type TParam = { blogID: string };
 
-const Post = ({ blogData, list, setList, favorites, setFavorites }:IMainProps) => {
-
+const Post = ({ blogData, list, setList, favorites, setFavorites, userPosts, setCurrentToEdit }:IMainProps) => {
     const { blogID }:TParam = useParams();
 
-    //an array with one object in it (blogIDs must be unique)
-    const currentBlog:IBlogPost[] = blogData.filter((blog: IBlogPost) => {
-        let blogNumId = parseInt(blogID);
-        return blog.blogID == blogNumId;
-    });
-    const thisBlog = currentBlog[0];
+    const [thisBlog, setThisBlog] = useState<IBlogPost>(currentBlog(blogID));
+    
+    // returns an array with one object in it (blogIDs must be unique)
+    function currentBlog (blogID: string):IBlogPost {
+            console.log(blogID)
+            let blogArr = blogData.filter((blog: IBlogPost) => {
+            let blogNumId = parseInt(blogID);
+            return blog.blogID == blogNumId;
+        })
+        return blogArr[0];
+    };
+
+    // useEffect(() => {
+    //     setThisBlog(currentBlog(blogID));
+    // }, [blogData])
+    
 
     return (
         <>
             <Header />
-            <Card>
+            {blogData.length ?
+            <Card className='m-3'>
                 <CardBody>
                     <CardTitle tag='h4'>{thisBlog.title}</CardTitle>
                     <CardSubtitle tag='h5'>Written by {thisBlog.author}</CardSubtitle>
                     <Row className='justify-content-between'>
-                        <CardText>{dateSwitcharoo(thisBlog.date)}</CardText>
                         <Col>
-                            <FavoriteIcon post={thisBlog} favorites={favorites} setFavorites={setFavorites}/>
-                            <TrashIcon post={thisBlog} list={list} setList={setList}/>
+                            <CardText>{dateSwitcharoo(thisBlog.date)}</CardText>
                         </Col>
                     </Row>
-                    <CardText>{currentBlog[0].fulltext}</CardText>
+                    <CardText>{thisBlog.fulltext}</CardText>
+                    <Row className='justify-items-between'>
+                        <Col>
+                            <FavoriteIcon post={thisBlog} favorites={favorites} setFavorites={setFavorites}/>
+                        </Col>
+                            {userPosts.some((userPost:IMyPosts) => userPost.blogID === thisBlog.blogID) && 
+                                <Col>
+                                    <TrashIcon post={thisBlog} list={list} setList={setList}/>
+                                    <EditButton post={thisBlog} setCurrentToEdit={setCurrentToEdit}/>
+                                </Col>
+                            } 
+                    </Row>
                 </CardBody>
             </Card>
+            : <p>Waiting for post</p>}
+            <ReturnHome />
         </>
     )
 }

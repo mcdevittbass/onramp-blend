@@ -1,4 +1,19 @@
 # Onramp Fullstack Take Home Project
+## Megan McDevitt's Blog Project
+
+### Installation
+  - Clone or download the repo from https://github.com/mcdevittbass/onramp-blend
+
+  - On the command line in the project root folder, cd to server => run npm install
+  - Move back up to the root directory (cd ..) and into the client folder => run yarn 
+  - In the server directory, add a file named "config.ts" and add a module.exports = {}
+  - In the empty object you just created, add the keys and values I have sent you separately (ask me if you don't have them!)
+
+Now you are ready to run the project with npm start in the server directory and yarn start in the client directory.
+
+
+
+
 
 ## Overview 🤖
 

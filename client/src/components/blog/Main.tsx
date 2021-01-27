@@ -1,39 +1,100 @@
-import React, { SetStateAction, MouseEvent } from 'react';
-import { Row, Button } from 'reactstrap';
+import React, { SetStateAction, useEffect } from 'react';
+import { Row } from 'reactstrap';
+import { useHistory } from 'react-router-dom';
 import Search from './Search';
 import PostList from './PostList';
 import FavoriteCheckBox from './FavoriteCheckBox';
 import WriteButton from './WriteButton';
-import { IBlogPost } from '../../App';
-import { useHistory } from 'react-router-dom';
-
-export const Header = () => {
-
-    const history = useHistory();
-
-    const handleSignOut = (e: MouseEvent<HTMLButtonElement>): void => {
-        console.log("clicked signout")
-        //clear sessionStorage (or other JWT storage location?)
-        
-        history.push('/landing');
-    }
-
-    return (
-        <Row id='header' className='m-2 p-3 justify-content-end'>
-            <Button id='signout-button' onClick={handleSignOut}>Sign Out</Button>
-        </Row>
-    )
-}
+import { IBlogPost, IMyPosts } from '../../App';
+import Header from './Header';
+import axios from 'axios';
 
 export interface IMainProps { 
     blogData: IBlogPost[]; 
+    setBlogData: (blogData:SetStateAction<IBlogPost[]>)=>void;
     favorites: number[];
     setFavorites: (favorites:SetStateAction<number[]>)=>void;
     list: IBlogPost[];
     setList: (list:SetStateAction<IBlogPost[]>)=>void;
+    userPosts: IMyPosts[];
+    setUserPosts: (userPosts:SetStateAction<IMyPosts[]>)=>void;
+    setCurrentToEdit: (currentToEdit:SetStateAction<IBlogPost | null> )=>void;
 }
 
-const Main = ({ blogData, list, setList, favorites, setFavorites }: IMainProps) => {
+const Main = ({ blogData, setBlogData, list, setList, favorites, setFavorites, userPosts, setUserPosts, setCurrentToEdit }: IMainProps) => {
+    const history = useHistory();
+
+    useEffect(() => {
+        const currentToken = localStorage.getItem('jwt');
+        const user = localStorage.getItem('user');
+        if(!currentToken) {
+          alert("Your session may have expired. Please sign in again!")
+          history.push('/landing');
+          return;
+        }
+        (async () => {
+          try {
+            const response = await axios({
+              method: 'get',
+              url: 'http://localhost:3001/blog',
+              headers: {"Authorization" : currentToken}
+            })
+            if(response.status === 200) {
+              setBlogData(response.data);
+              try {
+                const userResponse = await axios({
+                    method: 'get',
+                    url: `http://localhost:3001/user/info/${user}`,
+                    headers: {"Authorization" : currentToken}
+                  })
+                
+                  if(userResponse.status === 200) {
+                    setUserPosts(userResponse.data);
+                  } else{
+                      console.log(userResponse);
+                      history.push('/landing')
+                  }
+              } catch(err:any){
+                console.error(err);
+                history.push('/landing')
+              }
+            } else {
+                console.log(response);
+                alert("Your session may have expired. Please sign in again!")
+                history.push('/landing');
+            }
+          } catch (err:any) {
+                console.error("There was an error getting blog posts!")
+                history.push('/landing');
+            }
+        })();
+          
+        // get favorites array from users table
+        //   (async () => {
+        //     try{
+        //       const response = await axios({
+        //         method: 'get',
+        //         url: `http://localhost:3001/user/favorites/${user}`,
+        //         headers: {"Authorization" : currentToken}
+        //       });
+        //       if(response.status === 200) {
+        //         console.log(response)
+        //         const faves = response.data.favorites;
+        //         setFavorites(faves);
+        //       } else if(response.status === 401) {
+        //         alert("Your session may have timed out. Please sign in again!")
+        //         history.push('/landing')
+        //       }
+        //     }
+        //     catch(err) {
+        //       console.error(err);
+        //     }
+        // })();
+      }, []); 
+
+      useEffect(() => {
+        setList(blogData);
+      },[blogData]);
 
     return (
         <>
@@ -44,7 +105,16 @@ const Main = ({ blogData, list, setList, favorites, setFavorites }: IMainProps) 
                 <WriteButton />
             </Row>
             <Row>
-                <PostList blogData={list} favorites={favorites} setFavorites={setFavorites} list={list} setList={setList}/>
+                <PostList blogData={list} 
+                    setBlogData={setBlogData}
+                    favorites={favorites} 
+                    setFavorites={setFavorites} 
+                    list={list} 
+                    setList={setList}
+                    userPosts={userPosts}
+                    setUserPosts={setUserPosts}
+                    setCurrentToEdit={setCurrentToEdit}
+                    />
             </Row>
         </>
     )

@@ -29,10 +29,17 @@ Monday, Jan. 25:
         - map controllers to routes
         - test in PostMan
         - add edit component to front end (use Write component?)
-        - adjust favorites logic
-        - add axios logic
-        - generate JWT and route auth
-        if time, add styles
+                - adjust favorites logic
+                - add axios logic
+                - generate JWT and route auth
+
+Tuesday, Jan. 26:
+        - logic: update favorites, delete post, update post, add post, get user's posts (add trash and edit only to those)
+        - front end edit post code (write component with populated inputs?)
+        - sign up
+        - error handling (try to break it!)
+        - tests
+        - styles
 
 Notes: check render hold-ups https://www.toptal.com/react/optimizing-react-performance
     

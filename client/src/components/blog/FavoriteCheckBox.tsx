@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Col, Button, FormGroup, Label, Input } from 'reactstrap';
+import { Col, FormGroup, Label, Input } from 'reactstrap';
 import { IBlogPost } from '../../App';
 
 type TFaveProps = { 
@@ -13,13 +13,16 @@ const FavoriteCheckBox = ({ blogData, setList, favorites }:TFaveProps) => {
     const [favePosts, setFavePosts] = useState<IBlogPost[]>(getFaves());
     
     function getFaves():IBlogPost[] {
-        let data = blogData || [];
-        return blogData.filter((post) => favorites.includes(post.blogID));
+        if(favorites.length) {
+            let data = blogData;
+            return data.filter(post => favorites.includes(post.blogID));
+        }
+        return [];
     }
 
     useEffect(() => {
         setFavePosts(getFaves());
-    }, [favorites])
+    }, [favorites, blogData])
 
     const handleShowFavorites = (event: React.ChangeEvent<HTMLInputElement>): void => {
         let checkValue = event.target.value;

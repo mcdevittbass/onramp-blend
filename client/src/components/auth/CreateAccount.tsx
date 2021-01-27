@@ -1,10 +1,12 @@
 import React, { FormEvent, ChangeEvent, MouseEvent, useState, SetStateAction } from 'react';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader } from 'reactstrap';
-import Login from './Login';
+import axios from 'axios';
+import { useHistory } from 'react-router-dom';
 
 type TCreateProps = { setComponent: (currentComponent:SetStateAction<JSX.Element>)=> void}
 
 const CreateAccount = ( { setComponent }:TCreateProps) => {
+    const [firstName, setFirstName] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [passwordCompare, setPasswordCompare] = useState('');
@@ -13,25 +15,46 @@ const CreateAccount = ( { setComponent }:TCreateProps) => {
         password === '' ||
         email === '';
 
-    const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+    const history = useHistory();
+
+    const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
         //send post request to db with username and password info
         //if success, send to Login
         //add notification "your account has been created"?
-        setComponent(<Login />);
+        try {
+            const response = await axios({
+                method: 'post',
+                url: 'http://localhost:3001/user/signup',
+                data: {
+                    first_name: firstName,
+                    email: email,
+                    password: password
+                }
+            });
+            if(response.status === 200) {
+                alert(`You have created a new account, ${firstName}! Login to view the blog.`)
+            }
+            console.log(response);
+        } catch (err) {
+            console.error(err);
+        }
+        history.push('/landing')
     }
 
     const handleInputChange = (e:ChangeEvent<HTMLInputElement>) => {
-        if(e.target.name === 'email') {
+        if(e.target.name === 'firstName') {
+            setFirstName(e.target.value);
+        } else if(e.target.name === 'email') {
             setEmail(e.target.value);
         } else if(e.target.name === 'password') {
             setPassword(e.target.value);
         } else if(e.target.name === 'passwordCompare') {
             setPasswordCompare(e.target.value);
         }
-        //console.log(e.target.name + ': ' + e.target.value);
     }
 
     const handleCancel = (e:MouseEvent<HTMLButtonElement>) => {
+        setFirstName('');
         setEmail('');
         setPassword('');
         setPasswordCompare('');
@@ -44,6 +67,16 @@ const CreateAccount = ( { setComponent }:TCreateProps) => {
             </CardHeader>
             <CardBody>
                 <Form id="loginForm" onSubmit={handleSubmit}>
+                    <FormGroup className="row">
+                        <Col>
+                            <Label className="col-form-label" htmlFor="firstName">First Name</Label>
+                        </Col>
+                        <Col className="col-sm-8">
+                            <Input type="text" id="firstName" name="firstName" placeholder="First Name"
+                            value={firstName}
+                            onChange={handleInputChange} />
+                        </Col>
+                    </FormGroup>
                     <FormGroup className="row">
                         <Col>
                             <Label className="col-form-label" htmlFor="email">Email</Label>

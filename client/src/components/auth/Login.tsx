@@ -1,24 +1,40 @@
 import React, { FormEvent, useState, ChangeEvent, MouseEvent } from 'react';
 import { useHistory } from 'react-router-dom';
 import { Form, FormGroup, Col, Input, Label, Button, Card, CardBody, CardHeader} from 'reactstrap';
+import axios from 'axios';
+import { ILoginProps } from './Landing'; 
 
-const Login = () => {
+const Login = ({ setFavorites, setUserPosts }:ILoginProps) => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
     const history = useHistory();
 
-    const handleSubmit = (e:FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         //send get request to db for this username + password combo
-        //if success, receive JWT and add to sessionStorage (better solution?)
-        //else add help text
-        if(email !== 'mcdevittbass@gmail.com' || password !== 'password') {
-            alert('Your email or password do not match our records. Please try again.');
-        } else {
-            history.push('/main');
-        }
-        console.log(e);
+        try {
+            const results = await axios({
+                method: 'post',
+                url: 'http://localhost:3001/user/login',
+                data: {
+                email: email,
+                password: password
+                }
+            });
+            if(results.status === 401) {
+                alert('Wrong password or username!')
+            } else if(results.status === 200) {
+                localStorage.setItem('jwt', results.data.jwt);
+                localStorage.setItem('user', results.data.userID)
+                setFavorites(results.data.favorites ? results.data.favorites : []);
+                history.push('/main');
+            } else {
+                alert('There was a problem. Please try again!')
+            }
+        } catch (err) {
+            console.error(err)
+        }           
     }
 
     const handleInputChange = (e:ChangeEvent<HTMLInputElement>) => {
@@ -27,7 +43,7 @@ const Login = () => {
         } else if(e.target.name === 'password') {
             setPassword(e.target.value);
         }
-        console.log(e.target.name + ': ' + e.target.value);
+        //console.log(e.target.name + ': ' + e.target.value);
     }
 
     const handleCancel = (e:MouseEvent<HTMLButtonElement>) => {
