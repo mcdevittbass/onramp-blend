@@ -4,11 +4,6 @@ import { pool } from '../db.config';
 const userController = require('../user/userController');
 const { authenticate } = userController;
 
-//helper function to weed out apostrophe issues
-const handleApostrophes = (text:string):string => {
-  return text.replace("'", "''");
-}
-
 // get the whole list of blog posts
 const getBlog = async (req:Request, res:Response) => {
     let status = authenticate(req.headers.authorization);
@@ -42,7 +37,7 @@ const getOneBlog = async (req:Request, res:Response) => {
 }
 
 
-// add blog created by user to the blogposts table
+// add blog created by user to the blogposts table with authentication
 // on success, add the blogID-userID relationship to the user_blog_relationship table
 const postBlog = async (req:Request, res:Response) => {
     let status = authenticate(req.headers.authorization);
@@ -84,7 +79,7 @@ const postBlog = async (req:Request, res:Response) => {
     }
 }
 
-//delete a blog post
+//delete a blog post with authentication
 const deleteBlog = async (req:Request, res:Response) => {
   let status = authenticate(req.headers.authorization);
 
@@ -111,7 +106,7 @@ const deleteBlog = async (req:Request, res:Response) => {
   } 
 }
 
-//update a blog post
+//update a blog post with authentication
 const updateBlog = async (req:Request, res:Response) => {
   let status = authenticate(req.headers.authorization);
 

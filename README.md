@@ -11,6 +11,22 @@
 
 Now you are ready to run the project with npm start in the server directory and yarn start in the client directory.
 
+## Summary
+  This project allows users to login and create an account via the landing page. A JSON Web Token is stored in localStorage to be used in the headers of all subsequent api calls. 
+  The first page renders all of the blogs from the database. Users can add favorites or remove them by clicking the heart icon. 
+  A delete and edit icon appear on all blog posts that the user has created.
+  Clicking the edit icon will open a component (the same one used to write a post, but prepopulated with the values from the post they are editing.)
+  Clicking the trash icon will immediately delete the post (with more time I would have prompted the user for confirmation)
+  The "Create Post" button opens the same page as the edit one, but with empty fields.
+  Users can select whether to search by title or author, and the blogs that match their search will render. 
+  Users can click a "Show favorites" checkbox to see all of their favorite blog posts.
+  Users can sign out with the "sign out" button at the top.
+
+  # Architecture
+    I used an MVC architecture model for this, with axios calls to the Node backend, that then communicated with the PostGreSQL server via queries using node-postgres. Rather than organize files by function, I prefer to organize them by area. The authRouter and authController, for example, are in the same folder.
+
+  # Conclusion
+    I had never used PostGres or TypeScript before this project, so there was a bit of a learning curve for me! Because I took the time to try to learn to use these the best I could, I ran out of time to implement unit tests. I made one for the Header component (which is imperfect) to meet the basic requirements. Despite the time pressure, this project was really interesting, and I am looking forward to improving it in the future, as well as taking my skills to the next level. Thanks for your consideration!
 
 
 

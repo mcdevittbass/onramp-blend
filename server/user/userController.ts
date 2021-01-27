@@ -25,7 +25,7 @@ const authenticate = (token:string | undefined):number => {
 
 const user_logIn_post = async (req:Request, res:Response) => {
     const { email, password } = req.body;
-    //account for empty fields
+
     try {
     const results = await pool.query(`SELECT * FROM users WHERE email LIKE '${email}'`)
         const { rows, rowCount } = results;
@@ -48,6 +48,7 @@ const user_logIn_post = async (req:Request, res:Response) => {
     } 
 }
 
+// add user to the users table
 const user_signUp_post = async (req:Request, res:Response) => {
     const { first_name, email, password } = req.body;
     try {

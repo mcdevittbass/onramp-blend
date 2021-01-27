@@ -14,7 +14,7 @@ const Header = () => {
 
     return (
         <Row id='header' className='m-2 p-3 justify-content-end'>
-            <Button id='signout-button' onClick={handleSignOut}>Sign Out</Button>
+            <Button id='signout-button' data-testid='signOUT' onClick={handleSignOut}>Sign Out</Button>
         </Row>
     )
 }
